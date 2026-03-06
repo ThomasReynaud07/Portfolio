@@ -11,22 +11,35 @@ const News = () => {
   useEffect(() => {
     const fetchAllNews = async () => {
       try {
-        // 1. Appel pour la Une Générale
+        // Ajout de headers et de l'endpoint "top-headlines" qui est souvent moins restrictif sur le CORS que "search"
+        const fetchOptions = {
+          method: "GET",
+          mode: "cors" as RequestMode,
+        };
+
+        // 1. Appel pour la Une Générale (Top headlines Monde)
         const generalRes = await fetch(
-          `https://gnews.io/api/v4/search?q=monde&lang=fr&max=5&apikey=${API_KEY}`,
+          `https://gnews.io/api/v4/top-headlines?category=world&lang=fr&country=fr&max=5&apikey=${API_KEY}`,
+          fetchOptions,
         );
         const generalData = await generalRes.json();
 
-        // 2. Appel ciblé sur les conflits (Guerre, Iran, Moyen-Orient)
+        // 2. Appel ciblé sur les conflits (Search avec fallback)
         const warRes = await fetch(
-          `https://gnews.io/api/v4/search?q=guerre+OU+conflit+OU+iran+OU+israel&lang=fr&max=4&apikey=${API_KEY}`,
+          `https://gnews.io/api/v4/search?q=guerre+iran+israel&lang=fr&max=4&apikey=${API_KEY}`,
+          fetchOptions,
         );
         const warData = await warRes.json();
 
-        setMainArticles(generalData.articles || []);
-        setWarNews(warData.articles || []);
+        // Sécurité si l'API renvoie une erreur (quota atteint ou CORS)
+        if (generalData.articles) {
+          setMainArticles(generalData.articles);
+        }
+        if (warData.articles) {
+          setWarNews(warData.articles);
+        }
       } catch (error) {
-        console.error(error);
+        console.error("Erreur de récupération des news:", error);
       } finally {
         setLoading(false);
       }
@@ -44,7 +57,7 @@ const News = () => {
   const mainArticle = mainArticles[0];
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] pt-24 pb-12 text-white font-serif">
+    <div className="min-h-screen bg-[#0a0a0a] pt-24 pb-20 text-white font-serif">
       <div className="container mx-auto px-6 max-w-7xl">
         {/* HEADER JOURNALISTIQUE */}
         <div className="text-center border-b-4 border-double border-white/20 pb-6 mb-10">
@@ -67,9 +80,9 @@ const News = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-          {/* COLONNE GAUCHE : LA UNE (6 COLONNES) */}
+          {/* COLONNE GAUCHE */}
           <div className="lg:col-span-6 border-r border-white/10 pr-6">
-            {mainArticle && (
+            {mainArticle ? (
               <a
                 href={mainArticle.url}
                 target="_blank"
@@ -95,19 +108,16 @@ const News = () => {
                 <p className="text-lg text-gray-400 leading-tight mb-4 font-sans line-clamp-3">
                   {mainArticle.description}
                 </p>
-                <div className="flex items-center justify-between border-t border-white/5 pt-4">
-                  <span className="text-[10px] font-mono text-gray-500 italic">
-                    Source: {mainArticle.source.name}
-                  </span>
-                  <span className="text-[10px] font-bold text-primary group-hover:underline uppercase">
-                    Lire l'enquête complète →
-                  </span>
-                </div>
               </a>
+            ) : (
+              <div className="text-gray-600 italic">
+                Information temporairement indisponible (Vérifiez votre quota
+                API).
+              </div>
             )}
           </div>
 
-          {/* COLONNE CENTRALE : ALERTES GUERRE (3 COLONNES) */}
+          {/* COLONNE CENTRALE */}
           <div className="lg:col-span-3 border-r border-white/10 pr-6">
             <div className="flex items-center gap-2 mb-6 border-b border-red-600/50 pb-2">
               <AlertTriangle className="w-4 h-4 text-red-500 animate-pulse" />
@@ -116,29 +126,36 @@ const News = () => {
               </h3>
             </div>
             <div className="space-y-6">
-              {warNews.map((art, i) => (
-                <a
-                  key={i}
-                  href={art.url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="group block border-b border-white/5 pb-4 last:border-0"
-                >
-                  <h4 className="text-base font-bold leading-tight group-hover:text-red-400 transition-colors">
-                    {art.title}
-                  </h4>
-                  <div className="mt-2 flex items-center gap-2 text-[9px] font-mono text-gray-600">
-                    <Clock className="w-3 h-3" />{" "}
-                    {new Date(art.publishedAt).getHours()}h
-                    {(new Date(art.publishedAt).getMinutes() < 10 ? "0" : "") +
-                      new Date(art.publishedAt).getMinutes()}
-                  </div>
-                </a>
-              ))}
+              {warNews.length > 0 ? (
+                warNews.map((art, i) => (
+                  <a
+                    key={i}
+                    href={art.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="group block border-b border-white/5 pb-4 last:border-0"
+                  >
+                    <h4 className="text-base font-bold leading-tight group-hover:text-red-400 transition-colors">
+                      {art.title}
+                    </h4>
+                    <div className="mt-2 flex items-center gap-2 text-[9px] font-mono text-gray-600">
+                      <Clock className="w-3 h-3" />{" "}
+                      {new Date(art.publishedAt).toLocaleTimeString("fr-FR", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </div>
+                  </a>
+                ))
+              ) : (
+                <div className="text-xs text-gray-600">
+                  Aucune alerte récente.
+                </div>
+              )}
             </div>
           </div>
 
-          {/* COLONNE DROITE : FIL INFO MONDE (3 COLONNES) */}
+          {/* COLONNE DROITE */}
           <div className="lg:col-span-3">
             <div className="flex items-center gap-2 mb-6 border-b border-white/30 pb-2">
               <Globe className="w-4 h-4 text-primary" />
@@ -161,21 +178,8 @@ const News = () => {
                   <h4 className="text-sm font-bold leading-snug group-hover:underline decoration-primary">
                     {art.title}
                   </h4>
-                  <ChevronRight className="w-3 h-3 text-gray-700 mt-2 group-hover:translate-x-1 transition-transform" />
                 </a>
               ))}
-            </div>
-
-            {/* ENCART ANALYSE FINANCIÈRE */}
-            <div className="mt-8 bg-primary/5 p-4 border border-primary/20">
-              <p className="text-[10px] font-black text-primary mb-2 tracking-widest italic uppercase underline">
-                Impact Marchés
-              </p>
-              <p className="text-[11px] text-gray-400 font-sans leading-relaxed italic">
-                "La volatilité du brut reste corrélée aux tensions diplomatiques
-                en zone Golf. Les investisseurs se tournent vers les valeurs
-                refuges."
-              </p>
             </div>
           </div>
         </div>
