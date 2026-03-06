@@ -10,36 +10,29 @@ const News = () => {
 
   useEffect(() => {
     const fetchAllNews = async () => {
+      setLoading(true);
       try {
-        // Ajout de headers et de l'endpoint "top-headlines" qui est souvent moins restrictif sur le CORS que "search"
-        const fetchOptions = {
-          method: "GET",
-          mode: "cors" as RequestMode,
-        };
+        // Pour éviter le blocage CORS, on utilise 'top-headlines' qui est plus stable
+        const headers = { Accept: "application/json" };
 
-        // 1. Appel pour la Une Générale (Top headlines Monde)
-        const generalRes = await fetch(
-          `https://gnews.io/api/v4/top-headlines?category=world&lang=fr&country=fr&max=5&apikey=${API_KEY}`,
-          fetchOptions,
-        );
+        const [generalRes, warRes] = await Promise.all([
+          fetch(
+            `https://gnews.io/api/v4/top-headlines?category=world&lang=fr&country=fr&max=5&apikey=${API_KEY}`,
+            { headers },
+          ),
+          fetch(
+            `https://gnews.io/api/v4/search?q=guerre+conflit+iran&lang=fr&max=4&apikey=${API_KEY}`,
+            { headers },
+          ),
+        ]);
+
         const generalData = await generalRes.json();
-
-        // 2. Appel ciblé sur les conflits (Search avec fallback)
-        const warRes = await fetch(
-          `https://gnews.io/api/v4/search?q=guerre+iran+israel&lang=fr&max=4&apikey=${API_KEY}`,
-          fetchOptions,
-        );
         const warData = await warRes.json();
 
-        // Sécurité si l'API renvoie une erreur (quota atteint ou CORS)
-        if (generalData.articles) {
-          setMainArticles(generalData.articles);
-        }
-        if (warData.articles) {
-          setWarNews(warData.articles);
-        }
+        if (generalData.articles) setMainArticles(generalData.articles);
+        if (warData.articles) setWarNews(warData.articles);
       } catch (error) {
-        console.error("Erreur de récupération des news:", error);
+        console.error("Erreur News API:", error);
       } finally {
         setLoading(false);
       }
@@ -54,12 +47,9 @@ const News = () => {
       </div>
     );
 
-  const mainArticle = mainArticles[0];
-
   return (
-    <div className="min-h-screen bg-[#0a0a0a] pt-24 pb-20 text-white font-serif">
+    <div className="min-h-screen bg-[#0a0a0a] pt-24 pb-24 text-white font-serif">
       <div className="container mx-auto px-6 max-w-7xl">
-        {/* HEADER JOURNALISTIQUE */}
         <div className="text-center border-b-4 border-double border-white/20 pb-6 mb-10">
           <h1 className="text-7xl md:text-9xl font-black tracking-tighter uppercase italic leading-none">
             L'ÉDITION
@@ -69,118 +59,85 @@ const News = () => {
             <span className="bg-primary/10 text-primary px-2 py-0.5 rounded">
               ÉDITION SPÉCIALE GÉOPOLITIQUE
             </span>
-            <span>
-              {new Date().toLocaleDateString("fr-FR", {
-                day: "2-digit",
-                month: "2-digit",
-                year: "numeric",
-              })}
-            </span>
+            <span>{new Date().toLocaleDateString("fr-FR")}</span>
           </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-          {/* COLONNE GAUCHE */}
+          {/* Colonne Principale */}
           <div className="lg:col-span-6 border-r border-white/10 pr-6">
-            {mainArticle ? (
+            {mainArticles[0] && (
               <a
-                href={mainArticle.url}
+                href={mainArticles[0].url}
                 target="_blank"
                 rel="noreferrer"
                 className="group block"
               >
                 <div className="relative overflow-hidden mb-6 aspect-[16/10] bg-gray-900">
                   <img
-                    src={mainArticle.image}
-                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000"
+                    src={mainArticles[0].image}
+                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
                     alt=""
                   />
-                  <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-black/80 to-transparent" />
                   <div className="absolute bottom-4 left-4">
-                    <span className="bg-white text-black text-[9px] font-black px-2 py-1 uppercase tracking-tighter mb-2 inline-block italic">
-                      EXCLUSIF
-                    </span>
-                    <h2 className="text-3xl md:text-5xl font-black leading-[0.85] tracking-tighter uppercase">
-                      {mainArticle.title}
+                    <h2 className="text-3xl md:text-5xl font-black leading-[0.85] uppercase">
+                      {mainArticles[0].title}
                     </h2>
                   </div>
                 </div>
-                <p className="text-lg text-gray-400 leading-tight mb-4 font-sans line-clamp-3">
-                  {mainArticle.description}
+                <p className="text-lg text-gray-400 font-sans line-clamp-3">
+                  {mainArticles[0].description}
                 </p>
               </a>
-            ) : (
-              <div className="text-gray-600 italic">
-                Information temporairement indisponible (Vérifiez votre quota
-                API).
-              </div>
             )}
           </div>
 
-          {/* COLONNE CENTRALE */}
+          {/* Alertes Guerre */}
           <div className="lg:col-span-3 border-r border-white/10 pr-6">
-            <div className="flex items-center gap-2 mb-6 border-b border-red-600/50 pb-2">
-              <AlertTriangle className="w-4 h-4 text-red-500 animate-pulse" />
-              <h3 className="text-xs font-black uppercase text-red-500 tracking-widest italic">
+            <div className="flex items-center gap-2 mb-6 border-b border-red-600/50 pb-2 text-red-500">
+              <AlertTriangle className="w-4 h-4 animate-pulse" />
+              <h3 className="text-xs font-black uppercase tracking-widest">
                 Urgence Conflits
               </h3>
             </div>
             <div className="space-y-6">
-              {warNews.length > 0 ? (
-                warNews.map((art, i) => (
-                  <a
-                    key={i}
-                    href={art.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="group block border-b border-white/5 pb-4 last:border-0"
-                  >
-                    <h4 className="text-base font-bold leading-tight group-hover:text-red-400 transition-colors">
-                      {art.title}
-                    </h4>
-                    <div className="mt-2 flex items-center gap-2 text-[9px] font-mono text-gray-600">
-                      <Clock className="w-3 h-3" />{" "}
-                      {new Date(art.publishedAt).toLocaleTimeString("fr-FR", {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </div>
-                  </a>
-                ))
-              ) : (
-                <div className="text-xs text-gray-600">
-                  Aucune alerte récente.
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* COLONNE DROITE */}
-          <div className="lg:col-span-3">
-            <div className="flex items-center gap-2 mb-6 border-b border-white/30 pb-2">
-              <Globe className="w-4 h-4 text-primary" />
-              <h3 className="text-xs font-black uppercase text-white tracking-widest italic">
-                Fil Monde
-              </h3>
-            </div>
-            <div className="space-y-6">
-              {mainArticles.slice(1, 5).map((art, i) => (
+              {warNews.map((art, i) => (
                 <a
                   key={i}
                   href={art.url}
                   target="_blank"
                   rel="noreferrer"
-                  className="group block pb-4 border-b border-white/5 last:border-0"
+                  className="group block border-b border-white/5 pb-4"
                 >
-                  <p className="text-[9px] font-bold text-primary mb-1 uppercase tracking-tighter">
-                    {art.source.name}
-                  </p>
-                  <h4 className="text-sm font-bold leading-snug group-hover:underline decoration-primary">
+                  <h4 className="text-base font-bold leading-tight group-hover:text-red-400">
                     {art.title}
                   </h4>
                 </a>
               ))}
             </div>
+          </div>
+
+          {/* Fil Monde */}
+          <div className="lg:col-span-3">
+            <div className="flex items-center gap-2 mb-6 border-b border-white/30 pb-2">
+              <Globe className="w-4 h-4 text-primary" />
+              <h3 className="text-xs font-black uppercase tracking-widest">
+                Fil Monde
+              </h3>
+            </div>
+            {mainArticles.slice(1).map((art, i) => (
+              <a
+                key={i}
+                href={art.url}
+                target="_blank"
+                rel="noreferrer"
+                className="group block pb-4 border-b border-white/5 mb-4"
+              >
+                <h4 className="text-sm font-bold group-hover:text-primary">
+                  {art.title}
+                </h4>
+              </a>
+            ))}
           </div>
         </div>
       </div>

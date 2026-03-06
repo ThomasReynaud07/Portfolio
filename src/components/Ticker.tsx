@@ -21,23 +21,22 @@ const Ticker = () => {
           isUp: parseFloat(coin.priceChangePercent) >= 0,
         }));
 
+        // Valeurs fixes pour l'Or pour éviter le NaN
         const goldPrice = {
           symbol: "GOLD",
-          price: (2154.5 + Math.random()).toLocaleString(undefined, {
-            minimumFractionDigits: 2,
-          }),
+          price: "2,154.50",
           change: "0.14",
           isUp: true,
         };
 
         setData([goldPrice, ...formattedData]);
       } catch (error) {
-        console.error("Erreur API Binance:", error);
+        console.error("Ticker API Error:", error);
       }
     };
 
     fetchPrices();
-    const interval = setInterval(fetchPrices, 10000);
+    const interval = setInterval(fetchPrices, 30000);
     return () => clearInterval(interval);
   }, []);
 
@@ -56,16 +55,11 @@ const Ticker = () => {
       align-items: center;
       gap: 12px;
       padding: 0 50px;
-      font-family: 'JetBrains Mono', 'Inter', monospace;
-      font-size: 16px; 
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 16px;
       font-weight: 900;
       color: #000;
       text-transform: uppercase;
-      line-height: 1; /* Aligne le texte parfaitement au centre */
-    }
-    .ticker-symbol {
-      opacity: 0.5;
-      font-size: 13px;
     }
     .price-up { color: #fff; }
     .price-down { color: #850000; }
@@ -74,19 +68,24 @@ const Ticker = () => {
   return (
     <>
       <style>{tickerStyle}</style>
-      {/* py-2 au lieu de py-4 pour une barre plus fine */}
-      <div className="fixed bottom-0 left-0 w-full bg-primary py-2 overflow-hidden z-[100] border-t border-black/10 shadow-lg">
+      <div className="fixed bottom-0 left-0 w-full bg-primary py-2.5 overflow-hidden z-[100] border-t border-black/10">
         <div className="animate-ticker">
-          {[...data, ...data, ...data].map((item, idx) => (
-            <div key={idx} className="ticker-item">
-              <span className="ticker-symbol">{item.symbol}</span>
-              <span className="tracking-tighter">{item.price}</span>
-              <span className={item.isUp ? "price-up" : "price-down"}>
-                {item.isUp ? "▲" : "▼"} {Math.abs(item.change)}%
-              </span>
-              <span className="mx-2 opacity-10 text-black">/</span>
+          {data.length > 0 ? (
+            [...data, ...data, ...data].map((item, idx) => (
+              <div key={idx} className="ticker-item">
+                <span className="opacity-50 text-[13px]">{item.symbol}</span>
+                <span>{item.price}</span>
+                <span className={item.isUp ? "price-up" : "price-down"}>
+                  {item.isUp ? "▲" : "▼"} {item.change}%
+                </span>
+                <span className="mx-2 opacity-10">/</span>
+              </div>
+            ))
+          ) : (
+            <div className="ticker-item">
+              CHARGEMENT DES DONNÉES FINANCIÈRES...
             </div>
-          ))}
+          )}
         </div>
       </div>
     </>
