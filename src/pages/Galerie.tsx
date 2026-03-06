@@ -3,18 +3,18 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 const photos = [
   {
-    src: "/Image1.jfif",
+    src: "/public/Image1.jfif",
     alt: "Code",
     span: "md:col-span-2 md:row-span-2",
   },
-  { src: "/Image6.jfif", alt: "Workspace", span: "" },
-  { src: "/Image3.jfif", alt: "Color", span: "" },
-  { src: "/Image4.jfif", alt: "Setup", span: "md:row-span-2" },
-  { src: "/Image2.jfif", alt: "Espace", span: "md:col-span-2" },
-  { src: "/Image5.jfif", alt: "Meeting", span: "" },
-  { src: "/Image7.jfif", alt: "Team", span: "" },
-  { src: "/Image8.jfif", alt: "Dev", span: "" },
-  { src: "/Image.jfif", alt: "Final", span: "" },
+  { src: "/public/Image6.jfif", alt: "Workspace", span: "" },
+  { src: "/public/Image3.jfif", alt: "Color", span: "" },
+  { src: "/public/Image4.jfif", alt: "Setup", span: "md:row-span-2" },
+  { src: "/public/Image2.jfif", alt: "Espace", span: "md:col-span-2" },
+  { src: "/public/Image5.jfif", alt: "Meeting", span: "" },
+  { src: "/public/Image7.jfif", alt: "Team", span: "" },
+  { src: "/public/Image8.jfif", alt: "Dev", span: "" },
+  { src: "/public/Image.jfif", alt: "Final", span: "" },
 ];
 
 const Galerie = () => {
