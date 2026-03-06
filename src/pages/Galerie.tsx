@@ -7,14 +7,14 @@ const photos = [
     alt: "Code",
     span: "md:col-span-2 md:row-span-2",
   },
-  { src: "/public/image6.jfif", alt: "Workspace", span: "" },
-  { src: "/public/image3.jfif", alt: "Color", span: "" },
-  { src: "/public/image4.jfif", alt: "Setup", span: "md:row-span-2" },
-  { src: "/public/image2.jfif", alt: "Espace", span: "md:col-span-2" },
-  { src: "/public/image5.jfif", alt: "Meeting", span: "" },
-  { src: "/public/image7.jfif", alt: "Team", span: "" },
-  { src: "/public/image8.jfif", alt: "Dev", span: "" },
-  { src: "/public/image.jfif", alt: "Final", span: "" },
+  { src: "/image6.jfif", alt: "Workspace", span: "" },
+  { src: "/image3.jfif", alt: "Color", span: "" },
+  { src: "/image4.jfif", alt: "Setup", span: "md:row-span-2" },
+  { src: "/image2.jfif", alt: "Espace", span: "md:col-span-2" },
+  { src: "/image5.jfif", alt: "Meeting", span: "" },
+  { src: "/image7.jfif", alt: "Team", span: "" },
+  { src: "/image8.jfif", alt: "Dev", span: "" },
+  { src: "/image.jfif", alt: "Final", span: "" },
 ];
 
 const Galerie = () => {
