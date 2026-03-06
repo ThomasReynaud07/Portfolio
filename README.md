@@ -1,4 +1,4 @@
-# 🚀 Portfolio — [Thomas]
+# 🚀 Portfolio — Thomas
 
 Bienvenue sur le dépôt de mon portfolio personnel. Cette application est une vitrine interactive conçue pour présenter mes projets, mon parcours et mes compétences techniques avec une expérience utilisateur fluide et moderne.
 
