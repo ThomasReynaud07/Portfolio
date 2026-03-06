@@ -2,15 +2,15 @@ import { useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 const photos = [
-  { src: "/public/image/image (1).jfif", alt: "Code", span: "md:col-span-2 md:row-span-2" },
-  { src: "/public/image/image (6).jfif", alt: "Workspace", span: "" },
-  { src: "/public/image/image (3).jfif", alt: "Color", span: "" },
-  { src: "/public/image/image (4).jfif", alt: "Setup", span: "md:row-span-2" },
-  { src: "/public/image/image (2).jfif", alt: "Espace", span: "md:col-span-2" },
-  { src: "/public/image/image (5).jfif", alt: "Meeting", span: "" },
-  { src: "/public/image/image (7).jfif", alt: "Team", span: "" },
-  { src: "/public/image/image (8).jfif", alt: "Dev", span: "" },
-  { src: "/public/image/image.jfif", alt: "Final", span: "" },
+  { src: "/public/image (1).jfif", alt: "Code", span: "md:col-span-2 md:row-span-2" },
+  { src: "/public/image (6).jfif", alt: "Workspace", span: "" },
+  { src: "/public/image (3).jfif", alt: "Color", span: "" },
+  { src: "/public/image (4).jfif", alt: "Setup", span: "md:row-span-2" },
+  { src: "/public/image (2).jfif", alt: "Espace", span: "md:col-span-2" },
+  { src: "/public/image (5).jfif", alt: "Meeting", span: "" },
+  { src: "/public/image (7).jfif", alt: "Team", span: "" },
+  { src: "/public/image (8).jfif", alt: "Dev", span: "" },
+  { src: "/public/image.jfif", alt: "Final", span: "" },
 ];
 
 const Galerie = () => {
