@@ -2,14 +2,18 @@ import { useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 const photos = [
-  { src: "/public/image (1).jfif", alt: "Code", span: "md:col-span-2 md:row-span-2" },
-  { src: "/public/image (6).jfif", alt: "Workspace", span: "" },
-  { src: "/public/image (3).jfif", alt: "Color", span: "" },
-  { src: "/public/image (4).jfif", alt: "Setup", span: "md:row-span-2" },
-  { src: "/public/image (2).jfif", alt: "Espace", span: "md:col-span-2" },
-  { src: "/public/image (5).jfif", alt: "Meeting", span: "" },
-  { src: "/public/image (7).jfif", alt: "Team", span: "" },
-  { src: "/public/image (8).jfif", alt: "Dev", span: "" },
+  {
+    src: "/public/image1.jfif",
+    alt: "Code",
+    span: "md:col-span-2 md:row-span-2",
+  },
+  { src: "/public/image6.jfif", alt: "Workspace", span: "" },
+  { src: "/public/image3.jfif", alt: "Color", span: "" },
+  { src: "/public/image4.jfif", alt: "Setup", span: "md:row-span-2" },
+  { src: "/public/image2.jfif", alt: "Espace", span: "md:col-span-2" },
+  { src: "/public/image5.jfif", alt: "Meeting", span: "" },
+  { src: "/public/image7.jfif", alt: "Team", span: "" },
+  { src: "/public/image8.jfif", alt: "Dev", span: "" },
   { src: "/public/image.jfif", alt: "Final", span: "" },
 ];
 
@@ -19,7 +23,6 @@ const Galerie = () => {
   return (
     <section className="py-20 bg-background">
       <div className="container mx-auto px-6">
-        
         <div className="mb-12">
           <h1 className="text-4xl font-bold tracking-tight mb-2">Photos</h1>
           <div className="h-1 w-20 bg-primary rounded-full" />
@@ -44,7 +47,7 @@ const Galerie = () => {
                 className="w-full h-full object-cover will-change-transform transition-transform duration-500 group-hover:scale-105"
                 loading="lazy"
               />
-              
+
               {/* Overlay léger sans flou (le flou fait ramer) */}
               <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </div>
@@ -55,10 +58,10 @@ const Galerie = () => {
       <Dialog open={!!selected} onOpenChange={() => setSelected(null)}>
         <DialogContent className="max-w-4xl p-0 bg-transparent border-none">
           {selected && (
-            <img 
-              src={selected.src} 
-              alt={selected.alt} 
-              className="w-full h-auto rounded-lg shadow-2xl" 
+            <img
+              src={selected.src}
+              alt={selected.alt}
+              className="w-full h-auto rounded-lg shadow-2xl"
             />
           )}
         </DialogContent>
