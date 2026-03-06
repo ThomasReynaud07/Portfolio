@@ -2,7 +2,7 @@
 
 Bienvenue sur le dépôt de mon portfolio personnel. Cette application est une vitrine interactive conçue pour présenter mes projets, mon parcours et mes compétences techniques avec une expérience utilisateur fluide et moderne.
 
-![Preview du Projet](https://via.placeholder.com/800x400?text=Capture+d%27écran+de+votre+Portfolio) ## ✨ Fonctionnalités
+## ✨ Fonctionnalités
 
 - **Architecture Bento Grid** : Une disposition visuelle moderne et responsive pour la galerie et les sections de contenu.
 - **Galerie Photo Optimisée** : Système de visualisation d'images (Lightbox) avec des performances fluides.
@@ -25,7 +25,7 @@ Pour cloner et lancer ce projet localement :
 
 1. **Cloner le dépôt**
    ```bash
-   git clone [https://github.com/ton-pseudo/ton-repo-portfolio.git](https://github.com/ton-pseudo/ton-repo-portfolio.git)
+   git clone https://github.com/ThomasReynaud07/Portfolio
 ## Installer les dépendances
 
 Bash
