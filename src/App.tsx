@@ -11,6 +11,7 @@ import Contact from "./pages/Contact";
 import Trading from "./pages/Trading"; // 1. On importe la nouvelle page
 import News from "./pages/News";
 import NotFound from "./pages/NotFound";
+import WorldMap from "./pages/WorldMap";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +28,7 @@ const App = () => (
             <Route path="/galerie" element={<Galerie />} />
             <Route path="/trading" element={<Trading />} />{" "}
             <Route path="/news" element={<News />} />
+            <Route path="/worldmap" element={<WorldMap />} />
             {/* 2. On déclare la route ici */}
             <Route path="/contact" element={<Contact />} />
           </Route>
