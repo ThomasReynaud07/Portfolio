@@ -41,13 +41,13 @@ npm run dev
 `
 
 ## 📂 Structure du Projet
-Plaintext
-src/
-├── components/     # Composants réutilisables (Navbar, Galerie, FadeIn...)
-├── lib/            # Utilitaires (cn, fonctions de tri...)
-├── pages/          # Pages de l'application (Accueil, Contact, Expérience...)
-└── assets/         # Images et ressources statiques
-Conçu avec ♟️ et passion.
+Plaintext <br>
+src/ <br>
+├── components/     # Composants réutilisables (Navbar, Galerie, FadeIn...) <br>
+├── lib/            # Utilitaires (cn, fonctions de tri...) <br>
+├── pages/          # Pages de l'application (Accueil, Contact, Expérience...) <br>
+└── assets/         # Images et ressources statiques <br>
+Conçu avec ♟️ et passion. <br>
 
 
 ### 💡 Conseils pour personnaliser ton README :
