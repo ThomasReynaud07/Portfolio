@@ -7,6 +7,8 @@ const links = [
   { to: "/", label: "Accueil" },
   { to: "/experience", label: "Expérience" },
   { to: "/galerie", label: "Galerie" },
+  { to: "/trading", label: "Trading" },
+  { to: "/news", label: "Journal" },
   { to: "/contact", label: "Contact" },
 ];
 
@@ -17,11 +19,16 @@ const Navbar = () => {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/70 backdrop-blur-xl border-b border-border">
       <div className="container mx-auto flex items-center justify-between h-16 px-6">
-        <Link to="/" className="font-display text-lg font-semibold tracking-tight text-foreground">
-          portfolio<span className="text-primary">.</span>
+        {/* Texte Portfolio simple sans logo */}
+        <Link
+          to="/"
+          className="font-display text-lg font-semibold tracking-tight text-foreground group"
+        >
+          portfolio
+          <span className="text-primary group-hover:animate-pulse">.</span>
         </Link>
 
-        {/* Desktop */}
+        {/* Desktop Navigation */}
         <ul className="hidden md:flex items-center gap-8">
           {links.map((link) => (
             <li key={link.to}>
@@ -31,7 +38,7 @@ const Navbar = () => {
                   "font-display text-sm tracking-wide transition-colors hover:text-primary relative",
                   pathname === link.to
                     ? "text-foreground font-medium after:absolute after:bottom-[-4px] after:left-0 after:w-full after:h-[2px] after:bg-primary"
-                    : "text-muted-foreground"
+                    : "text-muted-foreground",
                 )}
               >
                 {link.label}
@@ -60,7 +67,9 @@ const Navbar = () => {
                   onClick={() => setOpen(false)}
                   className={cn(
                     "font-display text-sm tracking-wide transition-colors hover:text-primary block py-2",
-                    pathname === link.to ? "text-primary font-medium" : "text-muted-foreground"
+                    pathname === link.to
+                      ? "text-primary font-medium"
+                      : "text-muted-foreground",
                   )}
                 >
                   {link.label}

@@ -40,3 +40,24 @@
 .read-the-docs {
   color: #888;
 }
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    /* On utilise -50% car on duplique le contenu pour l'effet infini */
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  display: flex; /* Utilise flex au lieu de inline-flex pour mieux gérer l'espace */
+  width: max-content; /* Force le container à prendre toute la largeur du texte */
+  animation: marquee 40s linear infinite;
+  will-change: transform; /* Améliore la fluidité sur les navigateurs mobiles */
+}
+
+/* Optionnel : Pause au survol pour pouvoir lire un prix précis */
+.animate-marquee:hover {
+  animation-play-state: paused;
+}

@@ -8,6 +8,8 @@ import Index from "./pages/Index";
 import Experience from "./pages/Experience";
 import Galerie from "./pages/Galerie";
 import Contact from "./pages/Contact";
+import Trading from "./pages/Trading"; // 1. On importe la nouvelle page
+import News from "./pages/News";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -23,6 +25,9 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/experience" element={<Experience />} />
             <Route path="/galerie" element={<Galerie />} />
+            <Route path="/trading" element={<Trading />} />{" "}
+            <Route path="/news" element={<News />} />
+            {/* 2. On déclare la route ici */}
             <Route path="/contact" element={<Contact />} />
           </Route>
           <Route path="*" element={<NotFound />} />
