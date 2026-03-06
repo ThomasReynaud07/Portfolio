@@ -7,36 +7,53 @@ const News = () => {
   const [warNews, setWarNews] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // 1. TA CLÉ ET LE PROXY
-  const API_KEY = "931e4763136472277fbef334edc4f4d6";
-  const PROXY = "https://corsproxy.io/?";
+  // Utilise "test" par défaut, ou ta clé si tu en as généré une
+  const API_KEY = "test";
 
   useEffect(() => {
     const fetchAllNews = async () => {
       setLoading(true);
       try {
-        // 2. ENCODAGE DES URLS POUR LE PROXY
-        const generalUrl = encodeURIComponent(
-          `https://gnews.io/api/v4/top-headlines?category=world&lang=fr&country=fr&max=6&apikey=${API_KEY}`,
-        );
-        const warUrl = encodeURIComponent(
-          `https://gnews.io/api/v4/search?q=guerre+conflit+iran+israel&lang=fr&max=4&apikey=${API_KEY}`,
-        );
-
-        // 3. APPELS VIA LE PROXY
-        const [generalRes, warRes] = await Promise.all([
-          fetch(`${PROXY}${generalUrl}`),
-          fetch(`${PROXY}${warUrl}`),
+        // On lance deux recherches en parallèle pour remplir tes colonnes
+        const [worldRes, warRes] = await Promise.all([
+          fetch(
+            `https://content.guardianapis.com/search?section=world&show-fields=thumbnail,trailText&page-size=10&api-key=${API_KEY}`,
+          ),
+          fetch(
+            `https://content.guardianapis.com/search?q=(war OR conflict OR iran OR middle east)&show-fields=thumbnail,trailText&page-size=5&api-key=${API_KEY}`,
+          ),
         ]);
 
-        const generalData = await generalRes.json();
+        const worldData = await worldRes.json();
         const warData = await warRes.json();
 
-        // 4. MISE À JOUR SÉCURISÉE
-        if (generalData.articles) setMainArticles(generalData.articles);
-        if (warData.articles) setWarNews(warData.articles);
+        // On formate les données pour qu'elles collent à ton design
+        if (worldData.response.results) {
+          setMainArticles(
+            worldData.response.results.map((art: any) => ({
+              title: art.webTitle,
+              url: art.webUrl,
+              image:
+                art.fields?.thumbnail ||
+                "https://images.unsplash.com/photo-1504711434969-e33886168f5c?q=80&w=1000",
+              description:
+                art.fields?.trailText?.replace(/<[^>]*>/g, "") ||
+                "Analyse approfondie de la situation internationale en cours.",
+              source: "The Guardian",
+            })),
+          );
+        }
+
+        if (warData.response.results) {
+          setWarNews(
+            warData.response.results.map((art: any) => ({
+              title: art.webTitle,
+              url: art.webUrl,
+            })),
+          );
+        }
       } catch (error) {
-        console.error("Échec du chargement des actualités:", error);
+        console.error("Erreur Guardian API:", error);
       } finally {
         setLoading(false);
       }
@@ -65,14 +82,14 @@ const News = () => {
           <div className="flex justify-between items-center mt-4 text-[10px] font-mono text-gray-500 uppercase tracking-widest">
             <span>Volume IV — N° 2026</span>
             <span className="bg-primary/10 text-primary px-2 py-0.5 rounded">
-              ÉDITION SPÉCIALE GÉOPOLITIQUE
+              FLUX INTERNATIONAL LIVE
             </span>
             <span>{new Date().toLocaleDateString("fr-FR")}</span>
           </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-          {/* COLONNE GAUCHE : LA UNE */}
+          {/* COLONNE GAUCHE : LA UNE (Boss Column) */}
           <div className="lg:col-span-6 border-r border-white/10 pr-6">
             {mainArticle ? (
               <a
@@ -81,31 +98,31 @@ const News = () => {
                 rel="noreferrer"
                 className="group block"
               >
-                <div className="relative overflow-hidden mb-6 aspect-[16/10] bg-gray-900">
+                <div className="relative overflow-hidden mb-6 aspect-[16/10] bg-gray-900 border border-white/5">
                   <img
                     src={mainArticle.image}
                     className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000"
                     alt=""
                   />
-                  <div className="absolute bottom-4 left-4">
-                    <span className="bg-white text-black text-[9px] font-black px-2 py-1 uppercase mb-2 inline-block italic">
-                      EXCLUSIF
+                  <div className="absolute bottom-4 left-4 right-4">
+                    <span className="bg-white text-black text-[9px] font-black px-2 py-1 uppercase mb-2 inline-block italic shadow-lg">
+                      À LA UNE
                     </span>
-                    <h2 className="text-3xl md:text-5xl font-black leading-[0.85] tracking-tighter uppercase">
+                    <h2 className="text-3xl md:text-5xl font-black leading-[0.85] tracking-tighter uppercase drop-shadow-md">
                       {mainArticle.title}
                     </h2>
                   </div>
                 </div>
-                <p className="text-lg text-gray-400 leading-tight mb-4 font-sans line-clamp-3">
+                <p className="text-lg text-gray-400 leading-tight mb-4 font-sans line-clamp-3 italic">
                   {mainArticle.description}
                 </p>
                 <span className="text-[10px] font-bold text-primary group-hover:underline uppercase tracking-widest">
-                  Consulter le dossier complet →
+                  Accéder à la couverture complète →
                 </span>
               </a>
             ) : (
               <div className="text-gray-700 italic border p-10 border-dashed border-white/5">
-                Signal radio perdu...
+                Signal satellite interrompu...
               </div>
             )}
           </div>
@@ -132,13 +149,13 @@ const News = () => {
                       {art.title}
                     </h4>
                     <div className="mt-2 text-[9px] font-mono text-gray-600 uppercase">
-                      Dépêche {i + 1}
+                      Transmission #{1204 + i}
                     </div>
                   </a>
                 ))
               ) : (
                 <div className="text-[10px] text-gray-700 uppercase italic">
-                  Aucune alerte entrante
+                  En attente de dépêches...
                 </div>
               )}
             </div>
@@ -153,7 +170,7 @@ const News = () => {
               </h3>
             </div>
             <div className="space-y-6">
-              {mainArticles.slice(1).map((art, i) => (
+              {mainArticles.slice(1, 6).map((art, i) => (
                 <a
                   key={i}
                   href={art.url}
@@ -162,7 +179,7 @@ const News = () => {
                   className="group block pb-4 border-b border-white/5 last:border-0"
                 >
                   <p className="text-[9px] font-bold text-primary mb-1 uppercase tracking-tighter">
-                    {art.source.name}
+                    {art.source}
                   </p>
                   <h4 className="text-sm font-bold leading-snug group-hover:underline decoration-primary">
                     {art.title}
