@@ -3,18 +3,18 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 const photos = [
   {
-    src: "/public/image1.jfif",
+    src: "/Image1.jfif",
     alt: "Code",
     span: "md:col-span-2 md:row-span-2",
   },
-  { src: "/image6.jfif", alt: "Workspace", span: "" },
-  { src: "/image3.jfif", alt: "Color", span: "" },
-  { src: "/image4.jfif", alt: "Setup", span: "md:row-span-2" },
-  { src: "/image2.jfif", alt: "Espace", span: "md:col-span-2" },
-  { src: "/image5.jfif", alt: "Meeting", span: "" },
-  { src: "/image7.jfif", alt: "Team", span: "" },
-  { src: "/image8.jfif", alt: "Dev", span: "" },
-  { src: "/image.jfif", alt: "Final", span: "" },
+  { src: "/Image6.jfif", alt: "Workspace", span: "" },
+  { src: "/Image3.jfif", alt: "Color", span: "" },
+  { src: "/Image4.jfif", alt: "Setup", span: "md:row-span-2" },
+  { src: "/Image2.jfif", alt: "Espace", span: "md:col-span-2" },
+  { src: "/Image5.jfif", alt: "Meeting", span: "" },
+  { src: "/Image7.jfif", alt: "Team", span: "" },
+  { src: "/Image8.jfif", alt: "Dev", span: "" },
+  { src: "/Image.jfif", alt: "Final", span: "" },
 ];
 
 const Galerie = () => {
